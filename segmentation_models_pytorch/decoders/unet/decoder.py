@@ -24,38 +24,18 @@ class DecoderBlock(nn.Module):
 
 class CenterBlock(nn.Sequential):
     def __init__(self, in_channels, out_channels, use_batchnorm=True):
-        conv1 = md.Conv2dReLU(
-            in_channels,
-            out_channels,
-            kernel_size=3,
-            padding=1,
-            use_batchnorm=use_batchnorm,
-        )
-        conv2 = md.Conv2dReLU(
-            out_channels,
-            out_channels,
-            kernel_size=3,
-            padding=1,
-            use_batchnorm=use_batchnorm,
-        )
+        conv1 = md.Conv2dReLU(in_channels, out_channels, kernel_size=3, padding=1, use_batchnorm=use_batchnorm)
+        conv2 = md.Conv2dReLU( out_channels, out_channels, kernel_size=3, padding=1, use_batchnorm=use_batchnorm)
         super().__init__(conv1, conv2)
 
 
 class UnetDecoder(nn.Module):
-    def __init__(
-        self,
-        encoder_channels,
-        decoder_channels,
-        n_blocks=5,
-        use_batchnorm=True,
-        attention_type=None,
-        center=False,
-    ):
+    def __init__( self, encoder_channels, decoder_channels, n_blocks=5, use_batchnorm=True, attention_type=None, center=False):
         super().__init__()
 
         if n_blocks != len(decoder_channels):
             raise ValueError(
-                "Model depth is {}, but you provide `decoder_channels` for {} blocks.".format(
+                "Model depth is {}, but you provide `decoder_channels` for {} blocks.".format( 
                     n_blocks, len(decoder_channels)
                 )
             )
