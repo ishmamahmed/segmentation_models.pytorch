@@ -4,7 +4,6 @@ import torch.nn.functional as F
 
 from segmentation_models_pytorch.base import modules as md
 
-
 class DecoderBlock(nn.Module):
     def __init__(
         self,
