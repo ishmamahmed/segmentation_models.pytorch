@@ -3,6 +3,13 @@ import torch.nn as nn
 import torch.nn.functional as F
 from segmentation_models_pytorch.base import modules as md
 
+class CenterBlock(nn.Sequential):
+    def __init__(self, in_channels, out_channels, use_batchnorm=True):
+        conv1 = md.Conv2dReLU(in_channels, out_channels, kernel_size=3, padding=1, use_batchnorm=use_batchnorm)
+        conv2 = md.Conv2dReLU( out_channels, out_channels, kernel_size=3, padding=1, use_batchnorm=use_batchnorm)
+        super().__init__(conv1, conv2)
+
+
 class DecoderBlock(nn.Module):
     def __init__(self, in_channels, skip_channels, out_channels, use_batchnorm=True, attention_type=None):
         super().__init__()
@@ -20,14 +27,6 @@ class DecoderBlock(nn.Module):
         x = self.conv2(x)
         x = self.attention2(x)
         return x
-
-
-class CenterBlock(nn.Sequential):
-    def __init__(self, in_channels, out_channels, use_batchnorm=True):
-        conv1 = md.Conv2dReLU(in_channels, out_channels, kernel_size=3, padding=1, use_batchnorm=use_batchnorm)
-        conv2 = md.Conv2dReLU( out_channels, out_channels, kernel_size=3, padding=1, use_batchnorm=use_batchnorm)
-        super().__init__(conv1, conv2)
-
 
 class UnetDecoder(nn.Module):
     def __init__( self, encoder_channels, decoder_channels, n_blocks=5, use_batchnorm=True, attention_type=None, center=False):
