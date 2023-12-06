@@ -4,30 +4,11 @@ import torch.nn.functional as F
 from segmentation_models_pytorch.base import modules as md
 
 class DecoderBlock(nn.Module):
-    def __init__(
-        self,
-        in_channels,
-        skip_channels,
-        out_channels,
-        use_batchnorm=True,
-        attention_type=None,
-    ):
+    def __init__(self, in_channels, skip_channels, out_channels, use_batchnorm=True, attention_type=None):
         super().__init__()
-        self.conv1 = md.Conv2dReLU(
-            in_channels + skip_channels,
-            out_channels,
-            kernel_size=3,
-            padding=1,
-            use_batchnorm=use_batchnorm,
-        )
+        self.conv1 = md.Conv2dReLU(in_channels + skip_channels, out_channels, kernel_size=3, padding=1, use_batchnorm=use_batchnorm)
         self.attention1 = md.Attention(attention_type, in_channels=in_channels + skip_channels)
-        self.conv2 = md.Conv2dReLU(
-            out_channels,
-            out_channels,
-            kernel_size=3,
-            padding=1,
-            use_batchnorm=use_batchnorm,
-        )
+        self.conv2 = md.Conv2dReLU(out_channels, out_channels, kernel_size=3, padding=1, use_batchnorm=use_batchnorm)
         self.attention2 = md.Attention(attention_type, in_channels=out_channels)
 
     def forward(self, x, skip=None):
